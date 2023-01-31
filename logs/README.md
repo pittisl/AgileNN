@@ -1,0 +1,1 @@
+This fold stores training logs of AgileNN
