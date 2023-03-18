@@ -414,7 +414,7 @@ def construct_evaluator(model_path, feature_size=32, num_classes=100):
     return model
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='parser for configs to train Reference NN')
+    parser = argparse.ArgumentParser(description='Reference NN training configs')
     parser.add_argument('--dataset', type=str, default='cifar100', help='valid datasets are cifar10, cifar100, svhn, imagenet200')
     args = parser.parse_args()
     dataset = args.dataset

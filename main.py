@@ -7,7 +7,7 @@ from train_evaluator import construct_evaluator
 import argparse
 
 
-parser = argparse.ArgumentParser(description='parser for AgileNN configs')
+parser = argparse.ArgumentParser(description='AgileNN training configs')
 
 parser.add_argument('--dataset', type=str, default='cifar100', help='valid datasets are cifar10, cifar100, svhn, imagenet200')
 parser.add_argument('--split_ratio', type=float, default=0.2, help='num_local_features / (num_local_features + num_remote_features)')
