@@ -2,6 +2,7 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 import numpy as np
 import os
+import argparse
 from tqdm import tqdm
 from tiny_imagenet import TinyImagenetDataset # https://github.com/ksachdeva/tiny-imagenet-tfds
 
@@ -49,7 +50,7 @@ def train_effnetv2_on_cifar10(run_name, logdir):
     
     loss_fn_cls = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
     
-    runid = run_name + '_x' + str(np.random.randint(10000))
+    runid = run_name + '_cifar10' # '_x' + str(np.random.randint(10000))
     writer = tf.summary.create_file_writer(logdir + '/' + runid)
     accuracy = tf.metrics.SparseCategoricalAccuracy()
     cls_loss = tf.metrics.Mean()
@@ -140,7 +141,7 @@ def train_effnetv2_on_cifar100(run_name, logdir):
     
     loss_fn_cls = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
     
-    runid = run_name + '_x' + str(np.random.randint(10000))
+    runid = run_name + '_cifar100' # '_x' + str(np.random.randint(10000))
     writer = tf.summary.create_file_writer(logdir + '/' + runid)
     accuracy = tf.metrics.SparseCategoricalAccuracy()
     cls_loss = tf.metrics.Mean()
@@ -231,7 +232,7 @@ def train_effnetv2_on_svhn(run_name, logdir):
     
     loss_fn_cls = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
     
-    runid = run_name + '_x' + str(np.random.randint(10000))
+    runid = run_name + '_svhn' # '_x' + str(np.random.randint(10000))
     writer = tf.summary.create_file_writer(logdir + '/' + runid)
     accuracy = tf.metrics.SparseCategoricalAccuracy()
     cls_loss = tf.metrics.Mean()
@@ -327,7 +328,7 @@ def train_effnetv2_on_imagenet200(run_name, logdir):
     
     loss_fn_cls = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
     
-    runid = run_name + '_x' + str(np.random.randint(10000))
+    runid = run_name + '_imagenet200' # '_x' + str(np.random.randint(10000))
     writer = tf.summary.create_file_writer(logdir + '/' + runid)
     accuracy = tf.metrics.SparseCategoricalAccuracy()
     cls_loss = tf.metrics.Mean()
@@ -413,9 +414,19 @@ def construct_evaluator(model_path, feature_size=32, num_classes=100):
     return model
 
 if __name__ == '__main__':
-    # train_effnetv2_on_cifar10('effnetv2_pretrained', 'logs')
-    train_effnetv2_on_cifar100('effnetv2_pretrained', 'logs')
-    # train_effnetv2_on_svhn('effnetv2_pretrained', 'logs')
-    # train_effnetv2_on_imagenet200('effnetv2_pretrained', 'logs')
+    parser = argparse.ArgumentParser(description='parser for configs to train Reference NN')
+    parser.add_argument('--dataset', type=str, default='cifar100', help='valid datasets are cifar10, cifar100, svhn, imagenet200')
+    args = parser.parse_args()
+    dataset = args.dataset
+    if dataset == 'cifar10':
+        train_effnetv2_on_cifar10('effnetv2_pretrained', 'logs')
+    elif dataset == 'cifar100':
+        train_effnetv2_on_cifar100('effnetv2_pretrained', 'logs')
+    elif dataset == 'svhn':
+        train_effnetv2_on_svhn('effnetv2_pretrained', 'logs')
+    elif dataset == 'imagenet200':
+        train_effnetv2_on_imagenet200('effnetv2_pretrained', 'logs')
+    else:
+        raise NotImplementedError("This dataset has not been implemented yet")
     
     

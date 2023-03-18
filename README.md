@@ -9,32 +9,20 @@ This code repository provides training scripts of AgileNN. It leverages eXplaina
 * [tensorflow-datasets](https://github.com/tensorflow/datasets)
 * [tensorflow-addons](https://github.com/tensorflow/addons)
 * [tiny-imagenet-tfds](https://github.com/ksachdeva/tiny-imagenet-tfds)
-* [tqdm](https://github.com/tqdm/tqdm)
+* tqdm
 
-## How to use
-Below shows an example of training on CIFAR100 dataset:
+## Usage
+Below shows an example of training AgileNN on CIFAR100 dataset. First pre-train Reference NN on CIFAR100 dataset:
 
-At the bottom of `train_evaluator.py`, uncomment the following.
 ```
-train_effnetv2_on_cifar100('effnetv2_pretrained', 'logs')
+python train_evaluator.py --dataset cifar100
 ```
-Run `train_evaluator.py` to train Reference NN on CIFAR100. The trained Reference NN and its log will be saved to `saved_models/` and `logs/` respectively.
+Then train AgileNN on CIFAR100 dataset:
+```
+python main.py --dataset cifar100 --split_ratio 0.2 --rho 0.8 --klambda 0.8 --num_centroids 8
+```
 
-In `main.py`, change the model path to the trained Reference NN. For example,
-```
-EVALUATOR_PATH = 'saved_models/effnetv2_pretrained_x1886.tf'
-``` 
-Configure other hyperparameters in `main.py`. Some parameters such as `LAMBDA` and `NUM_CENTROIDS` may need finetuning for the best outcome.
-```python
-# training config of AgileNN
-DATASET = 'cifar100' # dataset to be trained on, selected from ['cifar10', 'cifar100', 'svhn', 'imagenet200']
-EVALUATOR_PATH = 'saved_models/effnetv2_pretrained_x1886.tf'
-SPLIT_RATIO = 0.2 # num_local_features / (num_local_features + num_remote_features)
-RHO = 0.8 # skewness of feature importance
-LAMBDA = 0.8 # to balance loss terms, lambda * L_ce + (1 - lambda) (L_skewness + L_disorder)
-NUM_CENTROIDS = 8 # quantize remote features to log2(NUM_CENTROIDS) bit representation 
-```
-Run `main.py`. It should achieve ~73% final accuracy and ~83% skewness. Computing gradients on gradients can be expensive, you may need powerful GPUs with large memory.
+It should achieve ~73% final accuracy and ~83% skewness. Computing gradients on gradients can be expensive, so you may need powerful GPUs with large memory.
 
 The trained modules of AgileNN can be converted to [tflite](https://www.tensorflow.org/lite) or [tflite-micro](https://www.tensorflow.org/lite/microcontrollers) format for deployment. The quantized remote features can be further compressed by lossless algorithms, e.g., [LZW](https://rosettacode.org/wiki/LZW_compression#Python) and [Huffman](https://rosettacode.org/wiki/Huffman_coding#C++).
 
