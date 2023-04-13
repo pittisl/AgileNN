@@ -182,12 +182,6 @@ def train_agilenn_cifar100(
 ):
     ds = tfds.load('cifar100', as_supervised=True)
     
-    def prep(x, y):
-        x = tf.cast(x, tf.float32)/255.
-        x = 2 * x - 1
-        x = tf.image.resize(x, [96, 96])
-        return x, y
-    
     std = tf.reshape((0.267, 0.256, 0.276), shape=(1, 1, 3))
     mean= tf.reshape((0.507, 0.487, 0.441), shape=(1, 1, 3))
     

@@ -19,8 +19,14 @@ python train_evaluator.py --dataset cifar100
 ```
 Then train AgileNN on CIFAR100 dataset:
 ```
-python main.py --dataset cifar100 --split_ratio 0.2 --rho 0.8 --klambda 0.8 --num_centroids 8
+python main.py --dataset cifar100 \
+               --split_ratio 0.2 \
+               --rho 0.8 \
+               --klambda 0.8 \
+               --num_centroids 8 \
+               --channel_remapping None
 ```
+**Note:** `channel_remapping` is an optional preprocessing step. It can sometimes improve training stability. Please refer to `feature_extractor_prep.py` and Section 5 in our paper for details.
 
 It should achieve ~73% final accuracy and ~83% skewness. Computing gradients on gradients can be expensive, so you may need powerful GPUs with large memory.
 
